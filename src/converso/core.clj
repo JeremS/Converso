@@ -1,4 +1,4 @@
-(ns convert.core
+(ns converso.core
   (:refer-clojure :exclude (== !=))
   (:use clojure.core.logic))
 

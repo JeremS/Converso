@@ -1,4 +1,4 @@
-(ns convert.core-test
+(ns converso.core-test
   (:use convert.core
         midje.sweet))
 
