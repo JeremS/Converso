@@ -26,7 +26,7 @@ and then do something like:
 
 ((search-conversion :cm :mm) 10)
 ;=> 100
-``
+```
 
 ## The goodies
 Using [core.logic](https://github.com/clojure/core.logic) to do only
