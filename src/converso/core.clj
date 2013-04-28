@@ -34,25 +34,6 @@
     (doseq [[from to] convs]
       (remove-conversion from to))))
 
-(comment
-(defn search-inverse 
-  ([c]
-   (first
-    (run 1 [inverse]
-      (fresh [?from ?to]
-        (conversions ?from ?to c)
-        (conversions ?to ?from inverse)))))
-  ([t1 t2]
-  (first
-   (run 1 [c]
-     (conde
-       [(conversions t2 t1 c)]
-       [(fresh [?c ?tx ?ty]
-          (conversions t1 t2   ?c)
-          (conversions ?tx ?ty ?c)
-          (conversions ?ty ?tx  c))])))))
-
-)
 
 (defn not-membero [x l]
   (conde 
@@ -97,15 +78,15 @@
    (not-membero from visited)
    (fresh [?fn] 
      (conda
-       [(conversions from to ?fn)
-        (== fns [?fn])]
-       
-       [(fresh []
-          (inverso to from ?fn)
-          (== fns [?fn]))]
+       [(conda
+          [(conversions from to ?fn)]
+          [(inverso to from ?fn)])
+        (conso ?fn '() fns )]
        
        [(fresh [?visited ?to ?fns]
-          (conversions from ?to ?fn)
+          (conda
+            [(conversions from ?to ?fn)]
+            [(inverso ?to from ?fn)])
           (not-membero ?to visited)
           (conso from visited ?visited)
           (converso ?visited ?to to ?fns)  
@@ -115,16 +96,6 @@
   (run* [c]
     (converso from to c)))
 
-(defn setup4 []
-  (do
-    (add-conversion ::mm ::cm    ::div-by-10)
-    (add-conversion ::cm ::dm    ::div-by-10)
-    (add-conversion ::cm ::decam ::div-by-1000 :*1000)
-    (add-conversion ::hm ::dm    ::*1000)
-    (add-conversion ::hm ::km    ::div-by-10)))
-
-(setup4)
-(search-conversions ::mm ::km)
 
 (comment
 (defn convert [val to-type]

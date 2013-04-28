@@ -124,15 +124,16 @@
   (do
     (add-conversion ::mm ::cm    ::div-by-10)
     (add-conversion ::cm ::dm    ::div-by-10)
-    (add-conversion ::cm ::decam ::div-by-1000 :*1000)
+    (add-conversion ::cm ::decam ::div-by-1000 ::*1000)
     (add-conversion ::hm ::dm    ::*1000)
     (add-conversion ::hm ::km    ::div-by-10)))
+
 
 (fact "The big final of the search we can use all technique together to find conversions"
   (setup4)
   
-  (trace (search-conversions ::mm :km))
-  => (contains '(::div-by-10 ::div-by-10 ::div-by-1000 ::div-by-10))
+  (trace (search-conversions ::mm ::km))
+  => '((::div-by-10 ::div-by-10 ::div-by-1000 ::div-by-10))
   
   (teardown))
 
