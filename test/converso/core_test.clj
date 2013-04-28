@@ -132,10 +132,41 @@
 (fact "The big final of the search we can use all technique together to find conversions"
   (setup4)
   
-  (trace (search-conversions ::mm ::km))
+  (search-conversions ::mm ::km)
   => '((::div-by-10 ::div-by-10 ::div-by-1000 ::div-by-10))
   
   (teardown))
 
 (future-fact "A conversion from a type to itself is the identity function"
              (conv ::x ::x) => identity)
+
+(defn *10 [n]
+  (* n 10))
+
+(defn div-10 [n]
+  (/ n 10))
+
+(defn *1000 [n]
+  (* n 1000))
+
+(defn div-1000 [n]
+  (/ n 1000))
+
+(defn setup5 []
+  (do
+    (add-conversion ::mm ::cm    div-10)
+    (add-conversion ::cm ::dm    div-10)
+    (add-conversion ::cm ::decam div-1000 *1000)
+    (add-conversion ::hm ::dm    *1000)
+    (add-conversion ::hm ::km    div-1000)))
+
+(fact "Now xe can convert a lot of things"
+  (setup4)
+  
+  (search-conversions ::mm ::km)
+  => '((div-10 div-10 div-1000 div-10))
+  
+  ((search-conversion ::mm ::km) 1)
+  => (/ 1 10 10 1000 10)
+  
+  (teardown))
