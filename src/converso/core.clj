@@ -2,7 +2,7 @@
   (:refer-clojure :exclude (== !=))
   (:use clojure.core.logic))
 
-(defrel conversions from to f)
+(defrel conversions ^:index from ^:index to ^:index f)
 
 
 (defn add-conversion 
@@ -16,7 +16,8 @@
      (add-conversion t2 t1 t2->1))))
 
 (defn conv [from to]
-  "Function that looks for a conversion."
+  "Function that looks for a conversion. 
+  It can only find specified coversions."
   (first
    (run 1 [c]
      (conversions from to c))))
@@ -81,7 +82,10 @@
   "Function that looks for the inverse of a conversion.
   
   - [c] looks for the inverse of c
-  - [from to] looks for what would be (conv to from)"
+  - [from to] looks for what would be (conv to from).
+  
+  In certain cases the [from to] can find a function
+  even if (conv to from) isn't specified."
   ([c]
    (first
     (run 1 [inverse]
@@ -91,8 +95,6 @@
     (run 1 [inverse]
       (inverso from to inverse)))))
 
-;; we could  also search for the inverse of the inverse 
-;; before constructing a path
 (defn converso
   "A goal that look for a conversion. Note that it construct 
   a list of lists of conversions because, if possible, it can
@@ -144,24 +146,30 @@
 
 (defn search-conversions
   "A function that looks for a conversions from `from`
-  to `to` using converso. Returns identity if the type 
+  to `to` using converso."
+  [from to]
+  (run* [c]
+    (converso from to c)))
+
+(defn search-conversion 
+  "Search a conversion from the type `from`
+  to the type `to`. Returns identity if the type 
   are the same."
   [from to]
   (if (= from to) 
     identity
-    (run* [c]
-      (converso from to c))))
+    (when-let [cs (search-conversions from to)]
+      (->> cs
+           first
+           reverse
+           (apply comp)))))
 
-(defn search-conversion [from to]
-  (when-let [cs (search-conversions from to)]
-    (->> cs
-         first
-         reverse
-         (apply comp))))
-
-(defn convert [from to]
-  (if-let [t-from (type from)
-           c (search-conversion t-from to)]
-    (c to)
-    (throw (ex-info "No conversion." {:from t-from
-                                      :to to}))))
+(defn convert 
+  "Convert a value 'value' to the type `to`"
+  [value to]
+  (let [from (type value)
+        c (search-conversion from to)]
+    (if c 
+      (c to)
+      (throw (ex-info "No conversion." {:from from
+                                        :to to})))))

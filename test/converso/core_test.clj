@@ -1,10 +1,6 @@
 (ns converso.core-test
   (:use converso.core
-        midje.sweet
-        
-        
-        clojure.tools.trace
-        ))
+        midje.sweet))
 
 (defn teardown [] (clear-all-conversions))
 
@@ -137,9 +133,6 @@
   
   (teardown))
 
-(future-fact "A conversion from a type to itself is the identity function"
-             (conv ::x ::x) => identity)
-
 (defn *10 [n]
   (* n 10))
 
@@ -158,13 +151,13 @@
     (add-conversion ::cm ::dm    div-10)
     (add-conversion ::cm ::decam div-1000 *1000)
     (add-conversion ::hm ::dm    *1000)
-    (add-conversion ::hm ::km    div-1000)))
+    (add-conversion ::hm ::km    div-10)))
 
 (fact "Now xe can convert a lot of things"
-  (setup4)
+  (setup5)
   
   (search-conversions ::mm ::km)
-  => '((div-10 div-10 div-1000 div-10))
+  => [[div-10 div-10 div-1000 div-10]]
   
   ((search-conversion ::mm ::km) 1)
   => (/ 1 10 10 1000 10)
