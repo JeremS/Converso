@@ -6,8 +6,9 @@
 
 
 (defn add-conversion 
-  "add a conversion to the conversion table and if 
-  provided the inverse of that conversion."
+  "Function that adds a conversion to the 
+  conversion table and if provided the inverse 
+  of that conversion."
   ([t1 t2 t1->2]
    (fact conversions t1 t2 t1->2))
   ([t1 t2 t1->2 t2->1]
@@ -65,7 +66,7 @@
   
   We can look for an inverse passing a function 
   directly (arity 2) or we can pass the type to convert
-  from and the type to convert to."
+  from and the type to convert to. (arity 3)"
   ([c inverse]
    (fresh [?from ?to ?c]
      (conversions ?from ?to c)
@@ -96,32 +97,31 @@
       (inverso from to inverse)))))
 
 (defn converso
-  "A goal that look for a conversion. Note that it construct 
+  "A goal that looks for a conversion. Note that it construct 
   a list of lists of conversions because, if possible, it can
   find a compositions of conversions to convert from `from`
   to `to` if (conv from to) isn't specified. 
   
-  More precisely it finds every possible combination 
-  of conversions that can do the job.
+  More precisely it finds every possible combinations of 
+  conversions that can do the job.
   
   It does so using differents strategies :
   
   - if (conv from to) exists -> it returns it
   - if (conv from to) doesn't exists but 
-    (search-inverse from to) does, it looks
-    if (-> (search-inverse from to)
-           (search-inverse))
-    does because
+    (search-inverse from to) does, it looks for
+    (-> (search-inverse from to)
+         (search-inverse))
+    because
     (-> (search-inverse from to)
         (search-inverse))
     <=> (conv from to)
   
   - if none of the above it can search for transitive relations like
-   (conv a c) = (conv a b ) then (conv b c).
+   (conv a c) <=> (conv a b ) then (conv b c).
   
-  Looking for a path of conversions it is able to use eauch strategy at each step.
-  
-  (see the 4th unit test on search-conversions)"
+  Looking for a path of conversions it is able to use each strategy 
+  at each step."
   ([from to fns]
    (converso '() from to fns))
   
@@ -165,7 +165,7 @@
            (apply comp)))))
 
 (defn convert 
-  "Convert a value 'value' to the type `to`"
+  "Convert a value `value` to the type `to`"
   [value to]
   (let [from (type value)
         c (search-conversion from to)]
