@@ -1,7 +1,7 @@
 # convert
 
 A Clojure library allowing to specify conversions between types
-and find some that aren't directly specified.
+and then find some conversions that aren't directly specified.
 
 ## Usage
 
@@ -43,7 +43,7 @@ This library use two mathematical properties:
  - transitivity
 
 ### Inverse functions
-Suppose we want to specify the metric system. 
+Suppose we want to specify a piece of the metric system. 
 We will use the units:
  - millimeters :mm
  - centimeters :cm 
@@ -82,7 +82,7 @@ We it gets interesting is that Converso lets you do that:
 (defn div-10 [n] (/ n 10))
 
 (add-conversion :mm :cm div-10 *10)
-(add-conversion :cm :dm :div-10)
+(add-conversion :cm :dm div-10)
 
 (search-conversion :dm :cm)
 ;=> *10
@@ -97,6 +97,7 @@ specifies implicitely that `div-10` and `*10` are inverse functions.
 The conversion `:dm -> :cm` isn't specified but its inverse `:cm -> :dm` is, it
 is the `div-10` function. Since we know that the inverse of 
 `div-10` is `*10` we can say that 
+
 ```
 :dm -> :cm 
 <=> inverse(inverse(:dm -> :cm))
@@ -105,8 +106,7 @@ is the `div-10` function. Since we know that the inverse of
 ```
 
 ### Transitivity
-Converso is also capable to use transitivity to find conversions 
-that are not specified.
+Converso is also capable to use transitivity to find conversions.
 
 If we take the previous example:
 ```clojure
@@ -114,12 +114,10 @@ If we take the previous example:
 (defn div-10 [n] (/ n 10))
 
 (add-conversion :mm :cm div-10 *10)
-(add-conversion :cm :dm :div-10)
-
-(search-conversion :dm :cm)
-;=> *10
+(add-conversion :cm :dm div-10)
 ```
-the conversion :mm :dm isn't specified but converso can do this:
+
+The conversion :mm :dm isn't specified but converso can do this:
 ```clojure
 (search-conversion :mm :cm) ;=> div-10
 (search-conversion :cm :dm) ;=> div-10
@@ -131,22 +129,20 @@ the conversion :mm :dm isn't specified but converso can do this:
 `:mm :dm` isn't specified but Converso can still find a way to do it.
 
 ### Transitivity + inverse functions
-Converso can use a combination of the to strategies to find conversions.
+Converso can use a combination of the two strategies to find conversions.
+
 Once again with the example:
 ```clojure
 (defn *10    [n] (* n 10))
 (defn div-10 [n] (/ n 10))
 
 (add-conversion :mm :cm div-10 *10)
-(add-conversion :cm :dm :div-10)
-
-(search-conversion :dm :cm)
-;=> *10
+(add-conversion :cm :dm div-10)
 ```
-The conversion `:dm :mm` isn't spécified but using both strategies
+The conversion `:dm -> :mm` isn't spécified but using both strategies
 Converso does this:
 ```clojure
-(search-conversion :dm =mm) ;=> (comp *10 *10) ; using the composition of the following
+(search-conversion :dm =mm) ;=> (comp *10 *10) ; using the composition of the following properties
   (search-conversion :dm :cm) ;=> div-10 (using the inverse :dm -> :cm)
   (search-conversion :dm :cm) :=> div-10 (user specified)
 ```
@@ -184,6 +180,10 @@ A more complicated is used in the tests :
 <=> (search-conversion :cm :decam)
 <=> div-1000
 ```
+
+## Note
+If we supress the use of the inverse functions Converso is 
+graph traversing tool with types as nodes and conversions as arcs.
 
 ## License
 
