@@ -34,7 +34,7 @@ simples conversions like above is a waste, multi-methods are fine
 to do this. Converso brings more to the table. 
 
 Since we are working with conversions we can use their 
-matehmatical properties to find conversions that are not specified.
+mathematical properties to find conversions that are not specified.
 This is were [core.logic](https://github.com/clojure/core.logic) is used.
 
 This library use two mathematical properties:
@@ -60,23 +60,20 @@ You can then look up for the conversions:
  ```clojure
  (search-conversion :mm :cm)
  ```
- 
  - :cm -> :mm
  ```clojure
  (search-conversion :cm :mm)
  ```
- 
  - :cm -> :dm
  ```clojure
  (search-conversion :cm :dm)
  ```
- 
  - :dm -> :cm
  ```clojure
  (search-conversion :dm :cm)
  ```
 
-We it gets interesting is that Converso lets you do that:
+It gets interesting because Converso lets you do that:
 ```clojure
 (defn *10    [n] (* n 10))
 (defn div-10 [n] (/ n 10))
@@ -107,7 +104,6 @@ is the `div-10` function. Since we know that the inverse of
 
 ### Transitivity
 Converso is also capable to use transitivity to find conversions.
-
 If we take the previous example:
 ```clojure
 (defn *10    [n] (* n 10))
@@ -130,7 +126,6 @@ The conversion :mm :dm isn't specified but converso can do this:
 
 ### Transitivity + inverse functions
 Converso can use a combination of the two strategies to find conversions.
-
 Once again with the example:
 ```clojure
 (defn *10    [n] (* n 10))
@@ -147,7 +142,7 @@ Converso does this:
   (search-conversion :dm :cm) :=> div-10 (user specified)
 ```
 
-A more complicated is used in the tests :
+A more complicated is used in `converso.core_test.clj`:
 ```clojure
 (defn *10 [n]
   (* n 10))
