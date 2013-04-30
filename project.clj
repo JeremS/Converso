@@ -1,4 +1,4 @@
-(defproject converso "0.1.0-SNAPSHOT"
+(defproject converso "0.1.0"
   :description "Library to specify conversions"
   :url "https://github.com/JeremS/Converso"
   :license {:name "Eclipse Public License"
