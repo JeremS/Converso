@@ -158,14 +158,16 @@
   [from to]
   (if (= from to)
     identity
-    (when-let [cs (search-conversions from to)]
+    (when-let [cs (seq (search-conversions from to))]
       (->> cs
            first
            reverse
            (apply comp)))))
 
 (defn convert
-  "Convert a value `value` to the type `to`"
+  "Convert a value `value` to the type `to`
+  Throws an ExceptionInfo if a conversion can't
+  be found."
   [value to]
   (let [from (type value)
         c (search-conversion from to)]
