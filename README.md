@@ -13,7 +13,7 @@ For instance you can specify:
 ```clojure
 (ns ...
   (use converso.core))
-  
+
 (add-conversion :mm :cm #(/ % 10) #(* % 10))
 
 ```
@@ -30,10 +30,10 @@ and then do something like:
 
 ## The goodies
 Using [core.logic](https://github.com/clojure/core.logic) to do only
-simples conversions like above is a waste, multi-methods are fine 
-to do this. Converso brings more to the table. 
+simples conversions like above is a waste, multi-methods are fine
+to do this. Converso brings more to the table.
 
-Since we are working with conversions we can use their 
+Since we are working with conversions we can use their
 mathematical properties to find conversions that are not specified.
 This is were [core.logic](https://github.com/clojure/core.logic) is used.
 
@@ -43,12 +43,12 @@ This library use two mathematical properties:
  - transitivity
 
 ### Inverse functions
-Suppose we want to specify a piece of the metric system. 
+Suppose we want to specify a piece of the metric system.
 We will use the units:
  - millimeters :mm
- - centimeters :cm 
+ - centimeters :cm
  - decimeters  :dm
- 
+
 We could specify the conversions like that:
 
 ```clojure
@@ -86,17 +86,17 @@ It gets interesting because Converso lets you do that:
 ```
 
 Here we didn't specify the conversion from :dm to :cm.
-However Converso is capable of finding it because 
+However Converso is capable of finding it because
 ```clojure
 (add-conversion :mm :cm div-10 *10)
 ```
 specifies implicitely that `div-10` and `*10` are inverse functions.
 The conversion `:dm -> :cm` isn't specified but its inverse `:cm -> :dm` is, it
-is the `div-10` function. Since we know that the inverse of 
-`div-10` is `*10` we can say that 
+is the `div-10` function. Since we know that the inverse of
+`div-10` is `*10` we can say that
 
 ```
-:dm -> :cm 
+:dm -> :cm
 <=> inverse(inverse(:dm -> :cm))
 <=> inverse(div-10)
 <=> *10
@@ -177,7 +177,7 @@ A more complicated is used in `converso.core_test.clj`:
 ```
 
 ## Note
-If we supress the use of the inverse functions Converso is 
+If we supress the use of the inverse functions Converso is some kind of
 graph traversing tool with types as nodes and conversions as arcs.
 
 ## License

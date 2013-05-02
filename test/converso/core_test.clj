@@ -1,4 +1,5 @@
-(ns converso.core-test
+(ns ^{:author "Jeremy Schoffen."}
+  converso.core-test
   (:use converso.core
         midje.sweet)
   (:import clojure.lang.ExceptionInfo))

@@ -1,4 +1,5 @@
-(ns converso.core
+(ns ^{:author "Jeremy Schoffen."}
+  converso.core
   (:refer-clojure :exclude (== !=))
   (:use clojure.core.logic))
 
