@@ -155,7 +155,7 @@
     (add-conversion ::hm ::dm    *1000)
     (add-conversion ::hm ::km    div-10)))
 
-(fact "Now xe can convert a lot of things"
+(fact "Now we can convert a lot of things"
   (setup5)
 
   (search-conversions ::mm ::km)
