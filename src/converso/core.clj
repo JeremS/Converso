@@ -10,12 +10,12 @@
   "Function that adds a conversion to the
   conversion table and if provided the inverse
   of that conversion."
-  ([t1 t2 t1->2]
-   (fact conversions t1 t2 t1->2))
-  ([t1 t2 t1->2 t2->1]
+  ([t1 t2 t1->t2]
+   (fact conversions t1 t2 t1->t2))
+  ([t1 t2 t1->t2 t2->t1]
    (do
-     (add-conversion t1 t2 t1->2)
-     (add-conversion t2 t1 t2->1))))
+     (add-conversion t1 t2 t1->t2)
+     (add-conversion t2 t1 t2->t1))))
 
 (defn conv [from to]
   "Function that looks for a conversion.
@@ -48,6 +48,15 @@
     (doseq [[from to] convs]
       (remove-conversion from to))))
 
+(defn defconversion
+  ([t1 t2 t1->t2]
+   (do
+     (remove-conversion t1 t2)
+     (add-conversion t1 t2 t1->t2)))
+  ([t1 t2 t1->t2 t2->t1]
+   (do
+     (remove-all-conversions t1 t2)
+     (add-conversion t1 t2 t1->t2 t2->t1))))
 
 (defn not-membero
   "A goal that succeeds when a value x

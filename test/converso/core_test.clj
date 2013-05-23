@@ -19,14 +19,14 @@
       (conv ::c ::d) => ::c-d
       (conv ::d ::c) => ::d-c)
 
-    (fact "we can remove conversions"
+    (fact "We can remove conversions"
       (add-conversion ::y ::z ::y-z)
       (conv ::y ::z) => ::y-z
 
       (remove-conversion ::y ::z)
       (conv ::y ::z) => nil )
 
-    (fact "We can remove more and its inverse for a pair of types"
+    (fact "We can remove a conversion and its inverse for a pair of types"
       (add-conversion ::y ::z ::y-z ::z-y)
       (conv ::y ::z) => ::y-z
       (conv ::z ::y) => ::z-y
@@ -45,6 +45,16 @@
   (conv ::a ::b) => nil
   (conv ::c ::d) => nil
   (conv ::d ::c) => nil)
+
+(fact "We can define and redefine conversions"
+  (defconversion ::a ::b ::a-b ::1)
+  (conv ::a ::b) => ::a-b
+
+  (defconversion ::a ::b ::a-b ::b-a)
+  (conv ::a ::b) => ::a-b
+  (conv ::b ::a) => ::b-a
+
+  (clear-all-conversions))
 
 
 (defn setup2 []
@@ -74,7 +84,7 @@
 
     (fact (str "If a conversion doesn't exists but its inverse does "
                "maybe its inverse inverse is used and already exists."
-               "This way we can use a conversion that not directly specified.")
+               "This way we can use a conversion that is not directly specified.")
       (conv ::cm :mm) => nil
       (search-inverse ::cm ::mm) => ::div-by-10
       (-> (search-inverse ::cm ::mm) search-inverse) => ::*10)))
